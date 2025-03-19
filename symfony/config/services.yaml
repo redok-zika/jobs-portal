@@ -1,0 +1,22 @@
+parameters:
+  recruitis.api_key: '%env(RECRUITIS_API_KEY)%'
+
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  App\:
+    resource: '../src/'
+    exclude:
+      - '../src/DependencyInjection/'
+      - '../src/Entity/'
+      - '../src/Kernel.php'
+
+  GuzzleHttp\Client:
+    class: GuzzleHttp\Client
+    arguments: []
+
+  App\Service\RecruitisApiClient:
+    arguments:
+      $apiKey: '%recruitis.api_key%'

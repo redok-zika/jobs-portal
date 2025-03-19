@@ -1,0 +1,14 @@
+node_modules/
+dist/
+coverage/
+build/
+.vscode/
+.idea/
+.git/
+.DS_Store
+*.d.ts
+public/
+docker/
+symfony/
+*.config.js
+vite.config.ts

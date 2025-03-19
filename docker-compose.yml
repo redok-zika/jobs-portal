@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: recruitis-app
+    restart: unless-stopped
+    ports:
+      - '8080:80'
+    volumes:
+      - .:/var/www
+      - ./docker/apache/000-default.conf:/etc/apache2/sites-available/000-default.conf
+    networks:
+      - recruitis
+
+  frontend:
+    image: node:20-alpine
+    container_name: recruitis-frontend
+    working_dir: /app
+    command: sh -c "npm install && npm run dev"
+    ports:
+      - '5173:5173'
+    volumes:
+      - .:/app
+    networks:
+      - recruitis
+
+networks:
+  recruitis:
+    driver: bridge
