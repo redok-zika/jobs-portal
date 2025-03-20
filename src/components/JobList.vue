@@ -14,8 +14,8 @@
         :page-count="totalPages"
         :background="true"
         layout="total, prev, pager, next"
-        @current-change="loadPage"
         class="mb-4 d-flex justify-content-center"
+        @current-change="loadPage"
       />
 
       <el-skeleton :loading="loading" animated>
@@ -96,8 +96,8 @@
               :page-count="totalPages"
               :background="true"
               layout="total, prev, pager, next"
-              @current-change="loadPage"
               class="mt-4 d-flex justify-content-center"
+              @current-change="loadPage"
             />
           </div>
         </template>

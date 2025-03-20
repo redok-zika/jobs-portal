@@ -5,36 +5,36 @@
     <div class="mb-3">
       <label for="linkedin" class="form-label">LinkedIn profil</label>
       <input
+        id="linkedin"
         type="url"
         class="form-control"
-        id="linkedin"
         :value="linkedin"
-        @input="$emit('update:linkedin', ($event.target as HTMLInputElement).value)"
         placeholder="https://linkedin.com/in/vas-profil"
+        @input="$emit('update:linkedin', ($event.target as HTMLInputElement).value)"
       />
     </div>
 
     <div class="mb-3">
       <label for="facebook" class="form-label">Facebook profil</label>
       <input
+        id="facebook"
         type="url"
         class="form-control"
-        id="facebook"
         :value="facebook"
-        @input="$emit('update:facebook', ($event.target as HTMLInputElement).value)"
         placeholder="https://facebook.com/vas.profil"
+        @input="$emit('update:facebook', ($event.target as HTMLInputElement).value)"
       />
     </div>
 
     <div class="mb-3">
       <label for="twitter" class="form-label">Twitter profil</label>
       <input
+        id="twitter"
         type="url"
         class="form-control"
-        id="twitter"
         :value="twitter"
-        @input="$emit('update:twitter', ($event.target as HTMLInputElement).value)"
         placeholder="https://twitter.com/vasprofil"
+        @input="$emit('update:twitter', ($event.target as HTMLInputElement).value)"
       />
     </div>
   </div>

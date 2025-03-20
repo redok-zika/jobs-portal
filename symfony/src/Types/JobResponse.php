@@ -6,9 +6,9 @@ namespace App\Types;
 
 class JobResponse
 {
-  public function __construct(
-    public array $payload = [],
-    public array $meta = []
-  ) {
-  }
+    public function __construct(
+        public array $payload = [],
+        public array $meta = []
+    ) {
+    }
 }

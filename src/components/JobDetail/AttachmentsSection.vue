@@ -6,9 +6,9 @@
       <div class="mb-3">
         <label for="cv" class="form-label">Životopis</label>
         <input
+          id="cv"
           type="file"
           class="form-control"
-          id="cv"
           accept=".pdf,.doc,.docx"
           @change="handleFileUpload($event, 2)"
         />
@@ -18,9 +18,9 @@
       <div class="mb-3">
         <label for="photo" class="form-label">Fotografie</label>
         <input
+          id="photo"
           type="file"
           class="form-control"
-          id="photo"
           accept="image/*"
           @change="handleFileUpload($event, 4)"
         />
@@ -29,7 +29,7 @@
 
       <div class="mb-3">
         <label for="other" class="form-label">Další příloha</label>
-        <input type="file" class="form-control" id="other" @change="handleFileUpload($event, 1)" />
+        <input id="other" type="file" class="form-control" @change="handleFileUpload($event, 1)" />
       </div>
 
       <AttachmentsList :attachments="attachments" @remove="removeAttachment" />

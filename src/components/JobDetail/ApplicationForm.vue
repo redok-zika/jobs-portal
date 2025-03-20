@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="handleSubmit" novalidate>
+  <form novalidate @submit.prevent="handleSubmit">
     <PersonalInfoSection
       v-model:name="form.name"
       v-model:email="form.email"

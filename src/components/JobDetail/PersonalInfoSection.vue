@@ -7,14 +7,14 @@
         Jméno a příjmení <span class="text-danger">*</span>
       </label>
       <input
+        id="name"
         type="text"
         class="form-control"
-        id="name"
         :value="name"
-        @input="$emit('update:name', ($event.target as HTMLInputElement).value)"
         :class="{ 'is-invalid': errors.name }"
         placeholder="Jan Novák"
         required
+        @input="$emit('update:name', ($event.target as HTMLInputElement).value)"
       />
       <div class="invalid-feedback">{{ errors.name }}</div>
     </div>
@@ -22,13 +22,13 @@
     <div class="mb-3">
       <label for="email" class="form-label"> Email <span class="text-danger">*</span> </label>
       <input
+        id="email"
         type="email"
         class="form-control"
-        id="email"
         :value="email"
-        @input="$emit('update:email', ($event.target as HTMLInputElement).value)"
         :class="{ 'is-invalid': errors.email }"
         required
+        @input="$emit('update:email', ($event.target as HTMLInputElement).value)"
       />
       <div class="invalid-feedback">{{ errors.email }}</div>
     </div>
@@ -36,13 +36,13 @@
     <div class="mb-3">
       <label for="phone" class="form-label"> Telefon <span class="text-danger">*</span> </label>
       <input
+        id="phone"
         type="tel"
         class="form-control"
-        id="phone"
         :value="phone"
-        @input="$emit('update:phone', ($event.target as HTMLInputElement).value)"
         :class="{ 'is-invalid': errors.phone }"
         required
+        @input="$emit('update:phone', ($event.target as HTMLInputElement).value)"
       />
       <div class="invalid-feedback">{{ errors.phone }}</div>
     </div>

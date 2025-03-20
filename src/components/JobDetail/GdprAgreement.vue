@@ -2,13 +2,13 @@
   <div class="mb-3">
     <div class="form-check">
       <input
+        id="gdpr_agreement"
         class="form-check-input"
         type="checkbox"
-        id="gdpr_agreement"
         :checked="agreement"
-        @change="$emit('update:agreement', ($event.target as HTMLInputElement).checked)"
         :class="{ 'is-invalid': error }"
         required
+        @change="$emit('update:agreement', ($event.target as HTMLInputElement).checked)"
       />
       <label class="form-check-label" for="gdpr_agreement">
         <span class="text-danger">*</span>

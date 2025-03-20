@@ -10,9 +10,9 @@ class ApiResponse
    * @param array<string, mixed> $payload
    * @param array<string, string> $meta
    */
-  public function __construct(
-    public array $payload = [],
-    public array $meta = []
-  ) {
-  }
+    public function __construct(
+        public array $payload = [],
+        public array $meta = []
+    ) {
+    }
 }

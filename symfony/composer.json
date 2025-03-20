@@ -71,10 +71,7 @@
     "post-update-cmd": [
       "@auto-scripts"
     ],
-    "test": "phpunit",
-    "test:api": "phpunit --testsuite=api",
-    "test:e2e": "phpunit --testsuite=e2e",
-    "test:unit": "phpunit --testsuite=unit"
+    "test": "phpunit"
   },
   "conflict": {
     "symfony/symfony": "*"
