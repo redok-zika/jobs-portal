@@ -4,110 +4,165 @@ Aplikace pro zobrazování a správu pracovních nabídek pomocí Recruitis.io A
 
 ## Technologie
 
+### Frontend
 - Vue.js 3 + TypeScript
-- Bootstrap 5
+- Element Plus pro UI komponenty
+- Bootstrap 5 pro layout a základní styly
 - Pinia pro state management
+- Vite jako build nástroj
+- Vitest pro unit testy
+
+### Backend
 - PHP 8.2+ s frameworkem Symfony 6.4
-- Docker pro vývojové prostředí
+- Apache jako webový server
+- Composer pro správu závislostí
+
+### Development
+- Docker a Docker Compose pro vývojové prostředí
+- ESLint + Prettier pro formátování kódu
+- PHPStan pro statickou analýzu PHP kódu
+- PHP_CodeSniffer pro coding standards
 
 ## Požadavky
 
 - Docker a Docker Compose
-- Node.js 20+ (pro lokální vývoj)
-- PHP 8.2+ (pro lokální vývoj)
-- Composer (pro lokální vývoj)
+- Git
 
 ## Instalace a spuštění
 
-### S Dockerem (doporučeno)
+### Vývojové prostředí (doporučeno)
 
-1. Naklonujte repozitář
-2. Vytvořte `.env.local` a nastavte API klíč:
+1. Naklonujte repozitář:
+   ```bash
+   git clone <repository-url>
+   cd recruitis-job-board
+   ```
+
+2. Vytvořte `.env.local` v adresáři `symfony` a nastavte API klíč:
    ```
    RECRUITIS_API_KEY=váš_api_klíč
    ```
-3. Spusťte kontejnery:
+
+3. Spusťte Docker kontejnery:
    ```bash
    docker-compose up -d
    ```
 
-Aplikace bude dostupná na:
+4. Aplikace bude dostupná na:
+   - Frontend: http://localhost:5173
+   - Backend API: http://localhost:8000
 
-- Frontend: http://localhost:5173
-- Backend API: http://localhost:8080
+### Struktura projektu
 
-### Lokální vývoj
-
-1. Nainstalujte závislosti:
-
-   ```bash
-   # Backend
-   composer install
-
-   # Frontend
-   npm install
-   ```
-
-2. Spusťte vývojové servery:
-
-   ```bash
-   # Backend
-   composer serve
-
-   # Frontend
-   npm run dev
-   ```
+```
+.
+├── docker/                 # Docker konfigurace
+├── src/                    # Frontend aplikace
+│   ├── components/        # Vue komponenty
+│   ├── composables/       # Vue composables
+│   ├── stores/           # Pinia stores
+│   └── types/            # TypeScript typy
+├── symfony/               # Backend aplikace
+│   ├── config/           # Symfony konfigurace
+│   ├── public/           # Veřejné soubory
+│   ├── src/              # PHP zdrojové kódy
+│   └── tests/            # Testy
+└── docker-compose.yml    # Docker Compose konfigurace
+```
 
 ## Vývoj
 
 ### Frontend
 
 Dostupné příkazy:
-
 ```bash
-npm run dev          # Spustí vývojový server
-npm run build        # Vytvoří produkční build
-npm run preview      # Náhled produkčního buildu
-npm run lint         # Kontrola kódu
-npm run lint:fix     # Automatická oprava lint chyb
-npm run format       # Formátování kódu
+# Spuštění vývojového serveru
+npm run dev
+
+# Build pro produkci
+npm run build
+
+# Spuštění testů
+npm run test
+
+# Lint a formátování
+npm run lint
+npm run format
+
+# Kontrola TypeScript typů
+npm run typecheck
 ```
 
 ### Backend
 
-Dostupné příkazy:
+Dostupné příkazy (spouštět v kontejneru `app`):
+```bash
+# Přístup do kontejneru
+docker-compose exec app bash
+
+# Composer příkazy
+composer install
+composer update
+
+# Testy
+composer test
+
+# Kontrola kódu
+composer phpstan
+composer cs
+composer cs:fix
+```
+
+## Docker kontejnery
+
+### Frontend (`frontend`)
+- Node.js 20 na Alpine Linux
+- Vite dev server na portu 5173
+- Hot-reloading pro Vue komponenty
+- Automatická instalace npm závislostí
+
+### Backend (`app`)
+- PHP 8.2 s Apache
+- Symfony 6.4
+- Composer pro správu závislostí
+- Apache na portu 8000
+
+### Užitečné Docker příkazy
 
 ```bash
-composer serve       # Spustí PHP vývojový server
-composer test       # Spustí všechny testy
-composer test:api   # Spustí API testy
-composer test:e2e   # Spustí E2E testy
-composer phpstan    # Statická analýza kódu
-composer cs         # Kontrola coding standards
-composer cs:fix     # Automatická oprava coding standards
+# Spuštění kontejnerů
+docker-compose up -d
+
+# Zastavení kontejnerů
+docker-compose down
+
+# Zobrazení logů
+docker-compose logs -f
+
+# Přístup do kontejneru
+docker-compose exec app bash
+docker-compose exec frontend sh
+
+# Rebuild kontejnerů
+docker-compose build --no-cache
 ```
 
 ## API Endpointy
 
 ### GET /api/jobs
-
 Seznam pracovních nabídek s podporou stránkování.
 
 Query parametry:
-
 - `page` (výchozí: 1)
 - `limit` (výchozí: 10)
 
 ### GET /api/jobs/{id}
-
 Detail pracovní nabídky.
 
 ### POST /api/jobs/{id}/apply
-
 Odeslání odpovědi na pracovní nabídku.
 
 Payload:
-
 ```json
 {
   "name": "string",
@@ -115,7 +170,6 @@ Payload:
   "phone": "string",
   "cover_letter": "string",
   "linkedin": "string (optional)",
-  "skype": "string (optional)",
   "facebook": "string (optional)",
   "twitter": "string (optional)",
   "attachments": [
@@ -136,56 +190,69 @@ Payload:
 }
 ```
 
+## Komponenty
+
+### Formulářové komponenty
+
+- `PersonalInfoSection`: Osobní údaje (jméno, email, telefon)
+- `SocialMediaSection`: Sociální sítě (LinkedIn, Facebook, Twitter)
+- `SalarySection`: Platové požadavky
+- `AttachmentsSection`: Nahrávání příloh
+- `GdprAgreement`: Souhlas se zpracováním osobních údajů
+
+### Validace
+
+Formuláře používají `useFormValidation` composable pro:
+- Validaci povinných polí
+- Kontrolu formátu emailu
+- Validaci telefonního čísla
+- Kontrolu URL adres
+- Validaci platových údajů
+
 ## Testování
 
 ### Frontend testy
-
 ```bash
-npm run test        # Spustí unit testy
+# Spuštění všech testů
+npm run test
 ```
 
 ### Backend testy
-
 ```bash
-composer test       # Spustí všechny testy
-composer test:api   # Spustí API testy
-composer test:e2e   # Spustí E2E testy
+# Unit a API
+composer test
 ```
 
 ## Kvalita kódu
 
 ### Frontend
-
 - ESLint pro kontrolu kódu
 - Prettier pro formátování
 - TypeScript pro typovou kontrolu
+- Vitest pro unit testy
 
 ### Backend
-
-- PHPStan pro statickou analýzu
-- PHP_CodeSniffer pro coding standards
+- PHPStan (level 8) pro statickou analýzu
+- PHP_CodeSniffer pro coding standards (PSR-12)
 - PHPUnit pro testování
 
-## Docker
+## Produkční nasazení
 
-Projekt obsahuje Docker konfiguraci pro vývojové prostředí:
+### Frontend
+1. Build aplikace:
+   ```bash
+   npm run build
+   ```
+2. Výsledné soubory v `dist/` nahrát na webový server
 
-- `app` - PHP 8.2 s Apache
-- `frontend` - Node.js 20 pro frontend
-
-### Užitečné příkazy
-
-```bash
-# Spuštění kontejnerů
-docker-compose up -d
-
-# Zastavení kontejnerů
-docker-compose down
-
-# Zobrazení logů
-docker-compose logs -f
-
-# Přístup do kontejneru
-docker-compose exec app bash
-docker-compose exec frontend sh
-```
+### Backend
+1. Nastavit produkční prostředí:
+   ```
+   APP_ENV=prod
+   APP_DEBUG=0
+   ```
+2. Optimalizace:
+   ```bash
+   composer install --no-dev --optimize-autoloader
+   ```
+3. Nastavit Apache/Nginx pro směrování na `public/index.php`
