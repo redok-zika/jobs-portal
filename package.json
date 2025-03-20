@@ -12,7 +12,6 @@
     "format": "prettier --write .",
     "typecheck": "vue-tsc --noEmit",
     "test": "vitest",
-    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "vue": "^3.4.21",
