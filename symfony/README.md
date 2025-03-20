@@ -256,3 +256,11 @@ composer test
    composer install --no-dev --optimize-autoloader
    ```
 3. Nastavit Apache/Nginx pro směrování na `public/index.php`
+
+## Troubleshooting
+
+Může být potřeba provést následující úlohy:
+
+1. `curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh'` nebo `sudo apt install symfony-cli` pro instalaci Symfony CLI
+2. `sudo apt install docker-compose` pro instalaci Docker Compose
+3. `sudo apt install php8.3-zip` pro instalaci ZIP knihovny pro PHP 8.2 resp. 8.3
