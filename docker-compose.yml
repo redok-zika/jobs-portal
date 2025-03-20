@@ -5,23 +5,28 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: recruitis-app
+    container_name: recruitis_app
     restart: unless-stopped
     ports:
-      - '8080:80'
-    volumes:
-      - .:/var/www
-      - ./docker/apache/000-default.conf:/etc/apache2/sites-available/000-default.conf
+      - "8000:80"
     networks:
       - recruitis
+    volumes:
+      - ./symfony:/var/www/symfony
+      - ./docker/apache/000-default.conf:/etc/apache2/sites-available/000-default.conf
+    environment:
+      - APACHE_RUN_USER=www-data
+      - APACHE_RUN_GROUP=www-data
+      - APP_ENV=dev
+      - APP_DEBUG=1
 
   frontend:
     image: node:20-alpine
-    container_name: recruitis-frontend
+    container_name: recruitis_frontend
     working_dir: /app
-    command: sh -c "npm install && npm run dev"
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
     ports:
-      - '5173:5173'
+      - "5173:5173"
     volumes:
       - .:/app
     networks:

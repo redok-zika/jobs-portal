@@ -19,8 +19,9 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:8000',
-        changeOrigin: true
+        target: 'http://recruitis_app:80',
+        changeOrigin: true,
+        secure: false
       }
     }
   },
