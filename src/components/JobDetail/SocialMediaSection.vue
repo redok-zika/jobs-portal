@@ -40,25 +40,23 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
+withDefaults(
+  defineProps<{
+    linkedin?: string
+    facebook?: string
+    twitter?: string
+  }>(),
+  {
+    linkedin: '',
+    facebook: '',
+    twitter: ''
+  }
+)
 
-export default defineComponent({
-  name: 'SocialMediaSection',
-  props: {
-    linkedin: {
-      type: String,
-      default: ''
-    },
-    facebook: {
-      type: String,
-      default: ''
-    },
-    twitter: {
-      type: String,
-      default: ''
-    }
-  },
-  emits: ['update:linkedin', 'update:skype', 'update:facebook', 'update:twitter']
-})
+defineEmits<{
+  (e: 'update:linkedin', value: string): void
+  (e: 'update:facebook', value: string): void
+  (e: 'update:twitter', value: string): void
+}>()
 </script>

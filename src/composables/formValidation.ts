@@ -1,67 +1,130 @@
 import type { FormData, FormErrors } from '../types/forms'
 
+interface ValidationResult {
+  isValid: boolean
+  validationErrors: FormErrors
+}
+
+interface ValidationRule {
+  validate: (value: string) => boolean
+  message: string
+}
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const phoneRegex = /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/
+const urlRegex = /^https?:\/\/.+/
+
+const validationRules = {
+  required: (fieldName: string): ValidationRule => ({
+    validate: (value: string) => !!value?.trim(),
+    message: `${fieldName} je povinné`
+  }),
+  email: {
+    validate: (value: string) => emailRegex.test(value),
+    message: 'Zadejte platný email'
+  },
+  phone: {
+    validate: (value: string) => phoneRegex.test(value),
+    message: 'Zadejte platné telefonní číslo'
+  },
+  url: {
+    validate: (value: string) => !value || urlRegex.test(value),
+    message: 'Zadejte platnou URL adresu'
+  }
+}
+
 export function useFormValidation() {
-  const validateForm = (form: FormData): { isValid: boolean; validationErrors: FormErrors } => {
+  const validateField = (value: string, rules: ValidationRule[]): string | null => {
+    for (const rule of rules) {
+      if (!rule.validate(value)) {
+        return rule.message
+      }
+    }
+    return null
+  }
+
+  const validatePersonalInfo = (form: FormData): FormErrors => {
     const errors: FormErrors = {}
-    let isValid = true
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    const phoneRegex = /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/
-    const urlRegex = /^https?:\/\/.+/
 
-    // Required fields
-    if (!form.name) {
-      errors.name = 'Jméno a příjmení jsou povinná'
-      isValid = false
+    const nameError = validateField(form.name, [validationRules.required('Jméno a příjmení')])
+    if (nameError) errors.name = nameError
+
+    if (form.email) {
+      const emailError = validateField(form.email, [
+        validationRules.required('Email'),
+        validationRules.email
+      ])
+      if (emailError) errors.email = emailError
     }
 
-    if (!form.email) {
-      errors.email = 'Email je povinný'
-      isValid = false
-    } else if (!emailRegex.test(form.email)) {
-      errors.email = 'Zadejte platný email'
-      isValid = false
+    if (form.phone) {
+      const phoneError = validateField(form.phone, [
+        validationRules.required('Telefon'),
+        validationRules.phone
+      ])
+      if (phoneError) errors.phone = phoneError
     }
 
-    if (!form.phone) {
-      errors.phone = 'Telefon je povinný'
-      isValid = false
-    } else if (!phoneRegex.test(form.phone)) {
-      errors.phone = 'Zadejte platné telefonní číslo'
-      isValid = false
+    return errors
+  }
+
+  const validateSocialMedia = (form: FormData): FormErrors => {
+    const errors: FormErrors = {}
+
+    if (form.linkedin) {
+      const linkedinError = validateField(form.linkedin, [validationRules.url])
+      if (linkedinError) errors.linkedin = linkedinError
     }
 
-    // Social media URLs
-    if (form.linkedin && !urlRegex.test(form.linkedin)) {
-      errors.linkedin = 'Zadejte platnou URL adresu'
-      isValid = false
+    if (form.facebook) {
+      const facebookError = validateField(form.facebook, [validationRules.url])
+      if (facebookError) errors.facebook = facebookError
     }
 
-    if (form.facebook && !urlRegex.test(form.facebook)) {
-      errors.facebook = 'Zadejte platnou URL adresu'
-      isValid = false
+    if (form.twitter) {
+      const twitterError = validateField(form.twitter, [validationRules.url])
+      if (twitterError) errors.twitter = twitterError
     }
 
-    if (form.twitter && !urlRegex.test(form.twitter)) {
-      errors.twitter = 'Zadejte platnou URL adresu'
-      isValid = false
-    }
+    return errors
+  }
 
-    // Salary validation
+  const validateSalary = (form: FormData): FormErrors => {
+    const errors: FormErrors = {}
+
     if (form.salary?.amount < 0) {
       errors.salary_amount = 'Částka nemůže být záporná'
-      isValid = false
     }
 
-    // GDPR agreement
+    return errors
+  }
+
+  const validateGdpr = (form: FormData): FormErrors => {
+    const errors: FormErrors = {}
+
     if (!form.gdpr_agreement) {
       errors.gdpr_agreement = 'Pro odeslání je nutný souhlas se zpracováním osobních údajů'
-      isValid = false
     }
 
-    return { isValid, validationErrors: errors }
+    return errors
+  }
+
+  const validateForm = (form: FormData): ValidationResult => {
+    const errors: FormErrors = {
+      ...validatePersonalInfo(form),
+      ...validateSocialMedia(form),
+      ...validateSalary(form),
+      ...validateGdpr(form)
+    }
+
+    return {
+      isValid: Object.keys(errors).length === 0,
+      validationErrors: errors
+    }
   }
 
   return {
-    validateForm
+    validateForm,
+    validateField
   }
 }

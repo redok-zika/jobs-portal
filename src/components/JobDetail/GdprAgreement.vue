@@ -22,21 +22,13 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
+defineProps<{
+  agreement: boolean
+  error?: string
+}>()
 
-export default defineComponent({
-  name: 'GdprAgreement',
-  props: {
-    agreement: {
-      type: Boolean,
-      required: true
-    },
-    error: {
-      type: String,
-      default: ''
-    }
-  },
-  emits: ['update:agreement']
-})
+defineEmits<{
+  (e: 'update:agreement', value: boolean): void
+}>()
 </script>

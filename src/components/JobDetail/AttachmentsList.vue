@@ -16,18 +16,14 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
 import type { Attachment } from '../../types/forms'
 
-export default defineComponent({
-  name: 'AttachmentsList',
-  props: {
-    attachments: {
-      type: Array as () => Attachment[],
-      required: true
-    }
-  },
-  emits: ['remove']
-})
+defineProps<{
+  attachments: Attachment[]
+}>()
+
+defineEmits<{
+  (e: 'remove', index: number): void
+}>()
 </script>

@@ -76,78 +76,59 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
 import type { Salary } from '../../types/job'
 import type { FormErrors } from '../../types/forms'
 
-export default defineComponent({
-  name: 'SalarySection',
-  props: {
-    salary: {
-      type: Object as () => Salary,
-      required: true
-    },
-    errors: {
-      type: Object as () => FormErrors,
-      required: true
-    }
-  },
-  emits: ['update:salary'],
-  setup(props, { emit }) {
-    const currencies = ['CZK', 'EUR', 'USD', 'BGN', 'RON', 'HUF']
+const props = defineProps<{
+  salary: Salary
+  errors: FormErrors
+}>()
 
-    const units = {
-      month: 'Měsíčně',
-      manday: 'Za člověkoden',
-      hour: 'Za hodinu',
-      year: 'Ročně'
-    }
+const emit = defineEmits<{
+  (e: 'update:salary', value: Salary): void
+}>()
 
-    const types = {
-      0: 'Plný úvazek',
-      1: 'Zkrácený úvazek',
-      2: 'Živnost',
-      3: 'Práce přes internet',
-      4: 'Práce z domova',
-      5: 'Krátkodobá práce',
-      6: 'Brigáda'
-    }
+const currencies = ['CZK', 'EUR', 'USD', 'BGN', 'RON', 'HUF']
 
-    const updateSalary = (updates: Partial<Salary>) => {
-      emit('update:salary', { ...props.salary, ...updates })
-    }
+const units = {
+  month: 'Měsíčně',
+  manday: 'Za člověkoden',
+  hour: 'Za hodinu',
+  year: 'Ročně'
+}
 
-    const updateAmount = (value: string) => {
-      updateSalary({ amount: parseInt(value) || 0 })
-    }
+const types = {
+  0: 'Plný úvazek',
+  1: 'Zkrácený úvazek',
+  2: 'Živnost',
+  3: 'Práce přes internet',
+  4: 'Práce z domova',
+  5: 'Krátkodobá práce',
+  6: 'Brigáda'
+}
 
-    const updateCurrency = (value: string) => {
-      updateSalary({ currency: value })
-    }
+const updateSalary = (updates: Partial<Salary>) => {
+  emit('update:salary', { ...props.salary, ...updates })
+}
 
-    const updateUnit = (value: string) => {
-      updateSalary({ unit: value })
-    }
+const updateAmount = (value: string) => {
+  updateSalary({ amount: parseInt(value) || 0 })
+}
 
-    const updateType = (value: string) => {
-      updateSalary({ type: parseInt(value) })
-    }
+const updateCurrency = (value: string) => {
+  updateSalary({ currency: value })
+}
 
-    const updateNote = (value: string) => {
-      updateSalary({ note: value })
-    }
+const updateUnit = (value: string) => {
+  updateSalary({ unit: value })
+}
 
-    return {
-      currencies,
-      units,
-      types,
-      updateAmount,
-      updateCurrency,
-      updateUnit,
-      updateType,
-      updateNote
-    }
-  }
-})
+const updateType = (value: string) => {
+  updateSalary({ type: parseInt(value) })
+}
+
+const updateNote = (value: string) => {
+  updateSalary({ note: value })
+}
 </script>
