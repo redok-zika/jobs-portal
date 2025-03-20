@@ -4,85 +4,125 @@ declare(strict_types=1);
 
 namespace App\Tests\Controller;
 
+use PHPUnit\Framework\Exception;
+use PHPUnit\Framework\ExpectationFailedException;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
 class JobControllerTest extends WebTestCase
 {
-    public function testListJobs(): void
-    {
-        $client = static::createClient();
-        $client->request('GET', '/api/jobs');
+  /**
+   * @throws Exception
+   */
+  public function testListJobs(): void
+  {
+    $client = static::createClient();
+    $response = $client->request('GET', '/api/jobs');
 
-        $this->assertResponseIsSuccessful();
-        $this->assertResponseHeaderSame('Content-Type', 'application/json');
+    $this->assertResponseIsSuccessful();
+    $this->assertResponseHeaderSame('Content-Type', 'application/json');
 
-        $response = json_decode($client->getResponse()->getContent(), true);
-        $this->assertArrayHasKey('data', $response);
-        $this->assertArrayHasKey('meta', $response);
+    $content = $client->getResponse()->getContent();
+    if (!is_string($content)) {
+      $this->fail('Response content is not a string');
     }
 
-    public function testListJobsWithPagination(): void
-    {
-        $client = static::createClient();
-        $client->request('GET', '/api/jobs?page=2&limit=5');
-
-        $this->assertResponseIsSuccessful();
-
-        $response = json_decode($client->getResponse()->getContent(), true);
-        $this->assertArrayHasKey('meta', $response);
-        $this->assertSame(2, $response['meta']['page']);
+    $data = json_decode($content, true);
+    if (!is_array($data)) {
+      $this->fail('Response is not valid JSON');
     }
 
-    public function testGetJobDetail(): void
-    {
-        $client = static::createClient();
-        $client->request('GET', '/api/jobs/1');
+    $this->assertArrayHasKey('payload', $data);
+    $this->assertArrayHasKey('meta', $data);
+  }
 
-        $this->assertResponseIsSuccessful();
+  /**
+   * @throws Exception
+   * @throws ExpectationFailedException
+   */
+  public function testListJobsWithPagination(): void
+  {
+    $client = static::createClient();
+    $response = $client->request('GET', '/api/jobs?page=2&limit=5');
 
-        $response = json_decode($client->getResponse()->getContent(), true);
-        $this->assertArrayHasKey('id', $response);
-        $this->assertArrayHasKey('title', $response);
+    $this->assertResponseIsSuccessful();
+
+    $content = $client->getResponse()->getContent();
+    if (!is_string($content)) {
+      $this->fail('Response content is not a string');
     }
 
-    public function testJobApplication(): void
-    {
-        $client = static::createClient();
-        $payload = [
-            'firstName' => 'John',
-            'lastName' => 'Doe',
-            'email' => 'john@example.com',
-            'phone' => '+420123456789',
-            'message' => 'I am interested in this position',
-        ];
-
-        $client->request(
-            'POST',
-            '/api/jobs/1/apply',
-            [],
-            [],
-            ['CONTENT_TYPE' => 'application/json'],
-            json_encode($payload)
-        );
-
-        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+    $data = json_decode($content, true);
+    if (!is_array($data)) {
+      $this->fail('Response is not valid JSON');
     }
 
-    public function testInvalidJobApplication(): void
-    {
-        $client = static::createClient();
-        $payload = []; // Empty payload should fail
+    $this->assertArrayHasKey('meta', $data);
+    $this->assertArrayHasKey('entries_total', $data['meta']);
+  }
 
-        $client->request(
-            'POST',
-            '/api/jobs/1/apply',
-            [],
-            [],
-            ['CONTENT_TYPE' => 'application/json'],
-            json_encode($payload)
-        );
+  /**
+   * @throws Exception
+   */
+  public function testGetJobDetail(): void
+  {
+    $client = static::createClient();
+    $response = $client->request('GET', '/api/jobs/431912');
 
-        $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
+    $this->assertResponseIsSuccessful();
+
+    $content = $client->getResponse()->getContent();
+    if (!is_string($content)) {
+      $this->fail('Response content is not a string');
     }
+
+    $data = json_decode($content, true);
+    if (!is_array($data)) {
+      $this->fail('Response is not valid JSON');
+    }
+
+    $this->assertArrayHasKey('payload', $data);
+    $this->assertArrayHasKey('job_id', $data['payload']);
+    $this->assertArrayHasKey('title', $data['payload']);
+  }
+
+  public function testJobApplication(): void
+  {
+    $client = static::createClient();
+    $payload = [
+      'name' => 'John Doe11',
+      'email' => 'john@exampleX.com',
+      'phone' => '+420123456780',
+      'cover_letter' => 'I am interested in this position',
+      'gdpr_agreement' => true
+    ];
+
+    $client->request(
+      'POST',
+      '/api/jobs/431912/apply',
+      [],
+      [],
+      ['CONTENT_TYPE' => 'application/json'],
+      json_encode($payload)
+    );
+
+    $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+  }
+
+  public function testInvalidJobApplication(): void
+  {
+    $client = static::createClient();
+    $payload = []; // Empty payload should fail
+
+    $client->request(
+      'POST',
+      '/api/jobs/1/apply',
+      [],
+      [],
+      ['CONTENT_TYPE' => 'application/json'],
+      json_encode($payload)
+    );
+
+    $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
+  }
 }

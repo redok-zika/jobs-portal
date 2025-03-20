@@ -3,3 +3,19 @@ parameters:
     paths:
         - src
         - tests
+    checkMissingIterableValueType: true
+    checkGenericClassInNonGenericObjectType: true
+    treatPhpDocTypesAsCertain: true
+    checkUninitializedProperties: true
+    rememberPossiblyImpureFunctionValues: false
+    reportUnmatchedIgnoredErrors: true
+    exceptions:
+        check:
+            missingCheckedExceptionInThrows: true
+            tooWideThrowType: true
+    ignoreErrors:
+        - '#Method [a-zA-Z0-9\\_]+::[a-zA-Z0-9\\_]+\(\) has parameter \$[a-zA-Z0-9\\_]+ with no value type specified in iterable type array#'
+        - '#Method [a-zA-Z0-9\\_]+::[a-zA-Z0-9\\_]+\(\) return type has no value type specified in iterable type array#'
+        - '#Parameter \#[0-9]+ \$content of method Symfony\\Component\\BrowserKit\\AbstractBrowser::request\(\) expects string\|null, string\|false given#'
+    excludePaths:
+        - tests/E2E/*

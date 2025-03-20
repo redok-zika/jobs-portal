@@ -176,10 +176,9 @@ export const useJobStore = defineStore('job', {
 
       if (!response.ok) {
         let errorMessage =
+          responseData.error ||
+          responseData.error?.message ||
           responseData.meta?.message ||
-          (typeof responseData.error === 'string'
-            ? responseData.error
-            : responseData.error?.message) ||
           'Nepodařilo se odeslat odpověď'
 
         if (responseData.meta?.code === 'api.error.validation') {

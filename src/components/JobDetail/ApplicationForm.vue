@@ -16,9 +16,9 @@
     <div class="mb-3">
       <label for="cover_letter" class="form-label">Zpráva</label>
       <textarea
-        class="form-control"
         id="cover_letter"
         v-model="form.cover_letter"
+        class="form-control"
         rows="4"
         placeholder="Průvodní dopis"
       ></textarea>
